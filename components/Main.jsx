@@ -1,33 +1,56 @@
-import React from "react";
 
+import React, { useEffect , useState} from "react";
+import Web3 from 'web3';
 
 
 function Main() {
+  
+   var url = "/"
+   
+   var provider = new Web3.providers.HttpProvider(url);
+   var web3= new Web3(provider)
+
+   const [number, setNumber]= useState(null);
+   const [hash , setHash] = useState(null);
+   const [time , setTime] = useState(null);
+
+
+   useEffect ( () => {
+    const blocknumber = async () => {
+      var data = await web3.eth.getBlockNumber()
+
+      for (var i =0 ; i < 1 ; i++){
+        var block = web3.eth.getBlock(data - i);
+        var number = (await block).number;
+        var hash = (await block).hash;
+        var time = (await block).timestamp;
+ 
+      setNumber(number);
+      setHash(hash);
+      setTime(time); 
+      }
+    }  
+     blocknumber()
+   },[])
+
+
+  
+  
     return (
         <div className="flex justify-center">
    <table className="table-auto shadow-lg bg-white w-4/5 text-center" >
   <thead className=" bg-gray-800 border-b">
-    <tr >
+    <tr>
       <th scope="col" className="text-center  px-8 py-4 font-medium text-white">#</th>
       <th scope="col" className="text-center  px-8 py-4 font-medium text-white">hash </th>
       <th scope="col" className="text-center px-8 py-4 font-medium text-white">timestamp</th>
     </tr>
   </thead>
   <tbody>
-    <tr className="border-b">
-      <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-      <td >Malcolm Lockyer</td>
-      <td >1961</td>
-    </tr>
-    <tr className="border-b">
-      <td  >Witchy Woman</td>
-      <td >The Eagles</td>
-      <td >1972</td>
-    </tr>
-    <tr className="border-b">
-      <td >Shining Star</td>
-      <td >Earth, Wind, and Fire</td>
-      <td>1975</td>
+    <tr>
+      <td>{number}</td>
+      <td>{hash}</td>
+      <td>{time}</td>
     </tr>
   </tbody>
 </table>
